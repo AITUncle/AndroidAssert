@@ -10,15 +10,27 @@
 
 
     <Button
-        android:id="@+id/btn_assertMainThread"
+        android:id="@+id/btn_updateUIAtMainThread"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="btn_assertMainThread"/>
+        android:text="updateUIAtMainThread" />
 
     <Button
-        android:id="@+id/btn_assertSubThread"
+        android:id="@+id/btn_updateUIAtSubThread"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="btn_assertSubThread"/>
+        android:text="updateUIAtSubThread" />
+
+    <Button
+        android:id="@+id/btn_writeFileAtMainThread"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="writeFileAtMainThread" />
+
+    <Button
+        android:id="@+id/btn_startMainActivity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="startMainActivity" />
 
 </LinearLayout>

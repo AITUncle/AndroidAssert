@@ -1,6 +1,5 @@
 package com.it.uncle.lib.util;
 
-import android.os.Looper;
 
 import junit.framework.AssertionFailedError;
 import junit.framework.ComparisonFailure;
@@ -12,10 +11,15 @@ import junit.framework.ComparisonFailure;
  */
 public class AndroidAssert {
 
-    private static boolean isEnable = true;
+    private static boolean isEnableThrowError = false;
 
-    public static void enable(boolean enable) {
-        isEnable = enable;
+    /**
+     * 尽早调用，建议在Application#onCreate的时候调用。
+     *
+     * @param enable 当断言失败时，是否抛出异常 AssertionFailedError
+     */
+    public static void enableThrowError(boolean enable) {
+        isEnableThrowError = enable;
     }
 
 
@@ -34,7 +38,7 @@ public class AndroidAssert {
      * 抛出断言异常
      */
     public static void fail(String message) {
-        if (isEnable) {
+        if (isEnableThrowError) {
             throw new AssertionFailedError(message);
         }
     }
@@ -46,16 +50,14 @@ public class AndroidAssert {
      * 检查当前是否是子线程，如果不是，抛出断言异常
      */
     public static void assertSubThread() {
-        if (isEnable)
-            assertTrue(Looper.getMainLooper() != Looper.myLooper());
+        assertTrue(ThreadTypeUtil.isSubThread());
     }
 
     /**
      * 检查当前是否是主线程，如果不是，抛出断言异常
      */
     public static void assertMainThread() {
-        if (isEnable)
-            assertTrue(Looper.getMainLooper() == Looper.myLooper());
+        assertTrue(ThreadTypeUtil.isMainThread());
     }
 
     /////// ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑ thread ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
@@ -198,7 +200,7 @@ public class AndroidAssert {
 
     private static void failNotSame(String message, Object expected,
                                     Object actual) {
-        if (!isEnable)
+        if (!isEnableThrowError)
             return;
         String formatted = "";
         if (message != null)
@@ -208,7 +210,7 @@ public class AndroidAssert {
     }
 
     private static void failSame(String message) {
-        if (!isEnable)
+        if (!isEnableThrowError)
             return;
         String formatted = "";
         if (message != null)
@@ -237,7 +239,7 @@ public class AndroidAssert {
      */
     public static void assertEquals(String message, Object expected,
                                     Object actual) {
-        if (!isEnable)
+        if (!isEnableThrowError)
             return;
 
         if (expected == null && actual == null)
@@ -314,7 +316,7 @@ public class AndroidAssert {
      */
     public static void assertEquals(String message, boolean expected,
                                     boolean actual) {
-        if (!isEnable)
+        if (!isEnableThrowError)
             return;
         assertEquals(message, Boolean.valueOf(expected), Boolean.valueOf(actual));
     }
@@ -324,7 +326,7 @@ public class AndroidAssert {
      * is thrown with the given message.
      */
     public static void assertEquals(String message, byte expected, byte actual) {
-        if (!isEnable)
+        if (!isEnableThrowError)
             return;
         assertEquals(message, Byte.valueOf(expected), Byte.valueOf(actual));
     }
@@ -334,7 +336,7 @@ public class AndroidAssert {
      * is thrown with the given message.
      */
     public static void assertEquals(String message, char expected, char actual) {
-        if (!isEnable)
+        if (!isEnableThrowError)
             return;
         assertEquals(message, Character.valueOf(expected), Character.valueOf(actual));
     }
@@ -346,7 +348,7 @@ public class AndroidAssert {
      */
     public static void assertEquals(String message, double expected,
                                     double actual, double delta) {
-        if (!isEnable)
+        if (!isEnableThrowError)
             return;
 
         // handle infinity specially since subtracting to infinite values gives
@@ -369,7 +371,7 @@ public class AndroidAssert {
      */
     public static void assertEquals(String message, float expected,
                                     float actual, float delta) {
-        if (!isEnable)
+        if (!isEnableThrowError)
             return;
 
         // handle infinity specially since subtracting to infinite values gives
@@ -387,7 +389,7 @@ public class AndroidAssert {
      * is thrown with the given message.
      */
     public static void assertEquals(String message, int expected, int actual) {
-        if (!isEnable)
+        if (!isEnableThrowError)
             return;
         assertEquals(message, Integer.valueOf(expected), Integer.valueOf(actual));
     }
@@ -397,7 +399,7 @@ public class AndroidAssert {
      * is thrown with the given message.
      */
     public static void assertEquals(String message, long expected, long actual) {
-        if (!isEnable)
+        if (!isEnableThrowError)
             return;
         assertEquals(message, Long.valueOf(expected), Long.valueOf(actual));
     }
@@ -407,7 +409,7 @@ public class AndroidAssert {
      * AssertionFailedError is thrown with the given message.
      */
     public static void assertEquals(String message, short expected, short actual) {
-        if (!isEnable)
+        if (!isEnableThrowError)
             return;
         assertEquals(message, new Short(expected), new Short(actual));
     }
@@ -425,7 +427,7 @@ public class AndroidAssert {
      */
     public static void assertEquals(String message, String expected,
                                     String actual) {
-        if (!isEnable)
+        if (!isEnableThrowError)
             return;
 
         if (expected == null && actual == null)
@@ -440,7 +442,7 @@ public class AndroidAssert {
 
     private static void failNotEquals(String message, Object expected,
                                       Object actual) {
-        if (!isEnable)
+        if (!isEnableThrowError)
             return;
         fail(format(message, expected, actual));
     }
