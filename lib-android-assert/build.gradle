@@ -32,3 +32,22 @@ dependencies {
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 }
+
+
+//jcenter 配置
+apply plugin: 'com.novoda.bintray-release'
+
+publish {
+
+    def groupProjectID = 'com.ituncle'
+    def artifactProjectID = 'android-assert'
+    def publishVersionID = '0.0.2'
+
+    userOrg = 'vectorzeng'
+    repoName = 'maven'
+    groupId = groupProjectID
+    artifactId = artifactProjectID
+    publishVersion = publishVersionID
+    desc = 'android开发工具类Assert'
+    website = 'https://github.com/AITUncle/AndroidAssert'
+}
