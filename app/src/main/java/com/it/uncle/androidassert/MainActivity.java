@@ -41,8 +41,8 @@ public class MainActivity extends Activity {
             new AssertCase().writeFile();
         });
 
-        findViewById(R.id.btn_startMainActivity).setOnClickListener(v -> {
-            new AssertCase().startMainActivity(null);
+        findViewById(R.id.btn_startTestActivity).setOnClickListener(v -> {
+            new AssertCase().startTestActivity(v.getContext());
         });
 
 

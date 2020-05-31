@@ -1,6 +1,7 @@
 package com.it.uncle.androidassert;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 
 import com.it.uncle.lib.util.AndroidAssert;
@@ -74,13 +75,13 @@ public class AssertCase {
     /**
      * 断言context为非空，如果为null，debug模式下抛出异常 AssertionFailedError
      */
-    public void startMainActivity(Context context) {
+    public void startTestActivity(Context context) {
         AndroidAssert.assertNotNull("context must not null", context);
         if (context == null) {
             return;
         }
-        //startMainActivity...
-        Log.i(TG, "startMainActivity...");
+        context.startActivity(new Intent(context, TestActivity.class));
+        Log.i(TG, "startTestActivity...");
     }
 
 

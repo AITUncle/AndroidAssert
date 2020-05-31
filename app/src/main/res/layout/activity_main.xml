@@ -28,9 +28,9 @@
         android:text="writeFileAtMainThread" />
 
     <Button
-        android:id="@+id/btn_startMainActivity"
+        android:id="@+id/btn_startTestActivity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="startMainActivity" />
+        android:text="startTestActivity" />
 
 </LinearLayout>
