@@ -274,22 +274,6 @@ public class AndroidAssert {
     }
 
     /**
-     * Asserts that two doubles are equal concerning a delta. If the expected
-     * value is infinity then the delta value is ignored.
-     */
-    public static void assertEquals(double expected, double actual, double delta) {
-        assertEquals(null, expected, actual, delta);
-    }
-
-    /**
-     * Asserts that two floats are equal concerning a delta. If the expected
-     * value is infinity then the delta value is ignored.
-     */
-    public static void assertEquals(float expected, float actual, float delta) {
-        assertEquals(null, expected, actual, delta);
-    }
-
-    /**
      * Asserts that two ints are equal.
      */
     public static void assertEquals(int expected, int actual) {
@@ -339,49 +323,6 @@ public class AndroidAssert {
         if (!isEnableThrowError)
             return;
         assertEquals(message, Character.valueOf(expected), Character.valueOf(actual));
-    }
-
-    /**
-     * Asserts that two doubles are equal concerning a delta. If they are not an
-     * AssertionFailedError is thrown with the given message. If the expected
-     * value is infinity then the delta value is ignored.
-     */
-    public static void assertEquals(String message, double expected,
-                                    double actual, double delta) {
-        if (!isEnableThrowError)
-            return;
-
-        // handle infinity specially since subtracting to infinite values gives
-        // NaN and the
-        // the following test fails
-        if (Double.isInfinite(expected)) {
-            if (!(expected == actual))
-                failNotEquals(message, Double.valueOf(expected), Double.valueOf(actual));
-        } else if (!(Math.abs(expected - actual) <= delta)) // Because
-            // comparison
-            // with NaN always
-            // returns false
-            failNotEquals(message, Double.valueOf(expected), Double.valueOf(actual));
-    }
-
-    /**
-     * Asserts that two floats are equal concerning a delta. If they are not an
-     * AssertionFailedError is thrown with the given message. If the expected
-     * value is infinity then the delta value is ignored.
-     */
-    public static void assertEquals(String message, float expected,
-                                    float actual, float delta) {
-        if (!isEnableThrowError)
-            return;
-
-        // handle infinity specially since subtracting to infinite values gives
-        // NaN and the
-        // the following test fails
-        if (Float.isInfinite(expected)) {
-            if (!(expected == actual))
-                failNotEquals(message, Float.valueOf(expected), Float.valueOf(actual));
-        } else if (!(Math.abs(expected - actual) <= delta))
-            failNotEquals(message, Float.valueOf(expected), Float.valueOf(actual));
     }
 
     /**
@@ -445,6 +386,65 @@ public class AndroidAssert {
         if (!isEnableThrowError)
             return;
         fail(format(message, expected, actual));
+    }
+
+    /**
+     * Asserts that two doubles are equal concerning a delta. If the expected
+     * value is infinity then the delta value is ignored.
+     */
+    public static void assertEquals(double expected, double actual, double delta) {
+        assertEquals(null, expected, actual, delta);
+    }
+
+    /**
+     * Asserts that two floats are equal concerning a delta. If the expected
+     * value is infinity then the delta value is ignored.
+     */
+    public static void assertEquals(float expected, float actual, float delta) {
+        assertEquals(null, expected, actual, delta);
+    }
+
+    /**
+     * Asserts that two doubles are equal concerning a delta. If they are not an
+     * AssertionFailedError is thrown with the given message. If the expected
+     * value is infinity then the delta value is ignored.
+     */
+    public static void assertEquals(String message, double expected,
+                                    double actual, double delta) {
+        if (!isEnableThrowError)
+            return;
+
+        // handle infinity specially since subtracting to infinite values gives
+        // NaN and the
+        // the following test fails
+        if (Double.isInfinite(expected)) {
+            if (!(expected == actual))
+                failNotEquals(message, Double.valueOf(expected), Double.valueOf(actual));
+        } else if (!(Math.abs(expected - actual) <= delta)) // Because
+            // comparison
+            // with NaN always
+            // returns false
+            failNotEquals(message, Double.valueOf(expected), Double.valueOf(actual));
+    }
+
+    /**
+     * Asserts that two floats are equal concerning a delta. If they are not an
+     * AssertionFailedError is thrown with the given message. If the expected
+     * value is infinity then the delta value is ignored.
+     */
+    public static void assertEquals(String message, float expected,
+                                    float actual, float delta) {
+        if (!isEnableThrowError)
+            return;
+
+        // handle infinity specially since subtracting to infinite values gives
+        // NaN and the
+        // the following test fails
+        if (Float.isInfinite(expected)) {
+            if (!(expected == actual))
+                failNotEquals(message, Float.valueOf(expected), Float.valueOf(actual));
+        } else if (!(Math.abs(expected - actual) <= delta))
+            failNotEquals(message, Float.valueOf(expected), Float.valueOf(actual));
     }
 
     /////// ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑ equals ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑

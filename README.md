@@ -97,6 +97,10 @@ AndroidAssert.assertSubThread()断言为子线程的意思是，断定当前线�
 -assumenosideeffects class com.it.uncle.lib.util.AndroidAssert
 ```
 
+对用法有疑惑的可以，看下这篇blog：https://blog.csdn.net/jiese1990/article/details/21752159
+
+以及官方wiki:https://www.guardsquare.com/en/products/proguard/manual/usage#assumenosideeffects
+
 
 
 
@@ -149,7 +153,7 @@ public void startMainActivity(Context context) {
   implementation 'com.ituncle:android-assert:0.0.1'
   ```
 
-- 初始化sdk
+- 初始化sdk，尽早调用，建议在Application#onCreate的时候调用。
 
 ```java
 //初始化----断言失败时，是否抛出异常
@@ -164,4 +168,101 @@ AndroidAssert.enableThrowError(BuildConfig.DEBUG);//我们设置为debug模式�
   ```
 
   
+
+## 三、API
+
+```java
+public class AndroidAssert {
+
+    /**
+     * 尽早调用，建议在Application#onCreate的时候调用。
+     *
+     * @param enable 当断言失败时，是否抛出异常 AssertionFailedError
+     */
+    public static void enableThrowError(boolean enable){}
+
+    /**
+     * 断言失败，抛出断言异常
+     */
+    public static void fail(){}
+    public static void fail(String message){}
+
+
+    /////// ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓ thread ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+
+    /**
+     * 检查当前是否是子线程，如果不是，抛出断言异常
+     */
+    public static void assertSubThread() {}
+
+    /**
+     * 检查当前是否是主线程，如果不是，抛出断言异常
+     */
+    public static void assertMainThread() {}
+
+
+    /////// ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓ null or nunNull ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+
+    /**
+     * 检查object是否为为非空，如果为空，抛出断言异常
+     */
+    public static void assertNotNull(Object object) {}
+    public static void assertNotNull(String message, Object object) {}
+
+    /**
+     * 检查object是否为null，如果不是null，抛出断言异常
+     */
+    public static void assertNull(Object object) {}
+    public static void assertNull(String message, Object object) {}
+
+
+
+    /////// ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓ true or false ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+
+    /**
+     * @param condition 不是true，将抛出断言异常
+     */
+    public static void assertTrue(boolean condition) {
+        assertTrue(null, condition);
+    }
+    public static void assertTrue(String message, boolean condition) {}
+
+    /**
+     * @param condition 不是false，将抛出断言异常
+     */
+    public static void assertFalse(boolean condition) {}
+    public static void assertFalse(String message, boolean condition) {}
+
+
+  
+    /////// ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓ same ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+    /**
+     * expected == actual为false，抛出断言异常
+     */
+    public static void assertSame(Object expected, Object actual) {}
+    public static void assertSame(String message, Object expected, Object actual) {}
+
+    /**
+     * object != actual为false，抛出断言异常
+     */
+    public static void assertNotSame(Object expected, Object actual) {}
+    public static void assertNotSame(String message, Object expected,
+                                     Object actual) {}
+
+
+    /////// ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓ equals ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+
+    /**
+     * 检查expected、actual两个对象equals是否为true，如果为false那么抛出断言异常
+     */
+    public static void assertEquals(Object expected, Object actual) {}
+    public static void assertEquals(String message, Object expected,
+                                    Object actual) {}
+    public static void assertEquals(boolean expected, boolean actual) {}
+    public static void assertEquals(byte expected, byte actual) {}
+    public static void assertEquals(char expected, char actual) {}
+    public static void assertEquals(int expected, int actual) {}
+		// ...
+}
+```
 
