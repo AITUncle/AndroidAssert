@@ -9,6 +9,52 @@ import com.it.uncle.lib.util.ThreadTypeUtil;
 public class AssertCase {
     private static final String TG = "vz-AssertCase";
 
+
+//    /**
+//     * 我们希望只在子线程中调用writeFile()，主线程中调用可能会导致ui卡顿或者anr。
+//     *
+//     * 如果在主线程调用writeFile()，我们打印日志警告开发者
+//     */
+//    public void writeFile() {
+//        //主线程，打印日志警告开发者
+//        if(!ThreadTypeUtil.isSubThread()){
+//            Log.e(TG, "you should call writeFile at sub thread");
+//        }
+//        // write file ...
+//        Log.i(TG, "writeFile...");
+//    }
+
+//    /**
+//     * 我们希望只在子线程中调用writeFile()，主线程中调用可能会导致ui卡顿或者anr。
+//     *
+//     * 如果在主线程调用writeFile()，debug模式下，我们抛出异常
+//     */
+//    public void writeFile() {
+//        //debug版本，主线程中调用 writeFile ，直接抛出异常中断程序运行
+//        if(!ThreadTypeUtil.isSubThread()){
+//            if(BuildConfig.DEBUG) {
+//                throw new RuntimeException("you should call writeFile at sub thread");
+//            }
+//
+//        }
+//        // write file ...
+//        Log.i(TG, "writeFile...");
+//    }
+
+    /**
+     * 我们希望只在子线程中writeFile()，如果在主线程中调用会导致ui卡顿或者anr。
+     * <p>
+     * 如果在主线程调用writeFile();
+     * 在debug模式，下将直接抛出异常 AssertionFailedError。让开发者
+     * 在release模式，不会抛出异常，会正常执行writeFile()函数。
+     */
+    public void writeFile() {
+        AndroidAssert.assertSubThread();
+        // write file ...
+        Log.i(TG, "writeFile...");
+    }
+
+
     /**
      * 更新UI操作必须在主线程中执行，否则将会引发crash或者界面异常。
      * <p>
@@ -23,20 +69,6 @@ public class AssertCase {
         }
         //update ui ....
         Log.i(TG, "updateUI...");
-    }
-
-
-    /**
-     * 我们希望只在子线程中writeFile()，如果在主线程中调用会导致ui卡顿或者anr。
-     * <p>
-     * 如果在主线程调用writeFile();
-     * 在debug模式，下将直接抛出异常 AssertionFailedError。让开发者
-     * 在release模式，不会抛出异常，会正常执行writeFile()函数。
-     */
-    public void writeFile() {
-        AndroidAssert.assertSubThread();
-        // write file ...
-        Log.i(TG, "writeFile...");
     }
 
     /**

@@ -20,4 +20,5 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
+# -dontoptimize ## 注意注意注意，不要加添加这个配置；将会关闭优化，导致日志语句不会被优化掉。
 -assumenosideeffects class com.it.uncle.lib.util.AndroidAssert

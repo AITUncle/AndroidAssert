@@ -14,8 +14,8 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //初始化----debug模式下断言失败才会抛出异常
-        AndroidAssert.enableThrowError(BuildConfig.DEBUG);
+        //初始化----断言失败时，是否抛出异常，默认不抛出异常
+        AndroidAssert.enableThrowError(BuildConfig.DEBUG);//我们设置为debug模式下，断言失败才抛出异常
 
         setContentView(R.layout.activity_main);
 
