@@ -2,11 +2,22 @@
 
 [ ![Download](https://api.bintray.com/packages/vectorzeng/maven/android-assert/images/download.svg?version=0.0.1) ](https://bintray.com/vectorzeng/maven/android-assert/0.0.1/link)
 
+- [x] 简介
+- [x] 一、什么是断言，什么情况下应该使用androidAssert？
+- [x] 二、集成AndroidAssert库
+- [x] 三、API
+
+
+
+
+
+
+
 ## 简介
 
 >  android-assert是一个非常简单轻量的android断言库。类似于junit的Assert类。
 >
-> android-assert不是用来写测试用例的，我们可以直接在项目代码中使用他。
+> android-assert不是用来写测试用例的，可以直接在项目代码中使用他。
 >
 > 在debug模式下，断言失败将会抛出断言异常 AssertionFailedError，在release模式下，将不会抛出异常。
 
@@ -14,11 +25,11 @@
 
 ## 一、什么是断言，什么情况下应该使用androidAssert？
 
-通常断言是用在单元测试，用来校验函数返回的结果的。
+通常断言(assert)是用在单元测试，用来校验函数返回的结果。用在自动化测试用来校验程序运行结果。
 
 但是我们接下来要讨论的并不是单元测试中使用断言，而是在项目业务代码中使用断言。
 
-我们一起来看几个，大家非常熟悉的栗子。这种情况下使用断言会比较合适。
+我们一起来看几个，大家非常熟悉的例子。这些情况下使用断言会让代码更加优雅，更加健壮。
 
 
 
@@ -94,16 +105,53 @@ AndroidAssert.assertSubThread()断言为子线程的意思是，断定当前线�
 
 ```pro
 # -dontoptimize ## 注意注意注意，proguard中配置dontoptimize；将会导致proguard不做代码优化，不会删除AndroidAssert类
--assumenosideeffects class com.it.uncle.lib.util.AndroidAssert
+-assumenosideeffects class com.it.uncle.lib.util.AndroidAssert{
+    public *;
+}
 ```
 
 对用法有疑惑的可以，看下这篇blog：https://blog.csdn.net/jiese1990/article/details/21752159
 
 以及官方wiki:https://www.guardsquare.com/en/products/proguard/manual/usage#assumenosideeffects
 
+**校验assumenosideeffects是否生效**
+
+1. 配置成功后，打包在mapping中搜索：com.it.uncle.lib.util.AndroidAssert
+
+proguard未配置 -assumenosideeffects 的mapping.txt文件
+
+![no-assumenosideeffects](img/no-assumenosideeffects.png)
 
 
 
+proguard配置了 -assumenosideeffects 的mapping.txt文件:
+
+![assumenosideeffects](img/assumenosideeffects.png)
+
+
+
+
+
+1. 反编译debug和release包对比。
+
+比如，我们demo里的[TestActivity](app/src/main/java/com/it/uncle/androidassert/TestActivity.java)
+
+```java
+public class TestActivity extends MainActivity {
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_test);
+
+        AndroidAssert.assertNotNull(getIntent());
+    }
+}
+```
+
+我们分别反编译debug和release包，找到TestActivity类的代码对比：
+
+![image-20200531183510001](img/debug-release.png)
 
 
 
@@ -150,7 +198,7 @@ public void startMainActivity(Context context) {
 - gradle引入
 
   ```gradle
-  implementation 'com.ituncle:android-assert:0.0.1'
+  implementation 'com.ituncle:android-assert:0.0.2'
   ```
 
 - 初始化sdk，尽早调用，建议在Application#onCreate的时候调用。
@@ -164,7 +212,9 @@ AndroidAssert.enableThrowError(BuildConfig.DEBUG);//我们设置为debug模式�
 
   ```pro
   # -dontoptimize ## 注意注意注意，proguard中配置dontoptimize；将会导致proguard不做代码优化，不会删除AndroidAssert类
-  -assumenosideeffects class com.it.uncle.lib.util.AndroidAssert
+  -assumenosideeffects class com.it.uncle.lib.util.AndroidAssert{
+      public *;
+  }
   ```
 
   
