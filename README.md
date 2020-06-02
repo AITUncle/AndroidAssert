@@ -1,6 +1,6 @@
 
 
-[ ![Download](https://api.bintray.com/packages/vectorzeng/maven/android-assert/images/download.svg?version=0.0.1) ](https://bintray.com/vectorzeng/maven/android-assert/0.0.1/link)
+[ ![Download](https://api.bintray.com/packages/vectorzeng/maven/android-assert/images/download.svg?version=0.0.2) ](https://bintray.com/vectorzeng/maven/android-assert/0.0.2/link)
 
 - [x] 一、简介
 - [x] 二、什么是断言，什么情况下应该使用androidAssert？
@@ -56,11 +56,6 @@ public void writeFile() {
 **于是我们改良了下代码：**
 
 ```java
-/**
- * 我们希望只在子线程中调用writeFile()，主线程中调用可能会导致ui卡顿或者anr。
- *
- * 如果在主线程调用writeFile()，我们打印日志警告开发者
- */
 public void writeFile() {
     //debug版本，主线程中调用 writeFile ，直接抛出异常中断程序运行
     if(!ThreadTypeUtil.isSubThread()){
@@ -74,7 +69,7 @@ public void writeFile() {
 
 当程序员企图在主线程中调用writeFile()，在debug模式下，我们直接抛出异常，让程序崩溃。以中断他的开发。强制他优化代码。
 
-我们引入断言，**继续改造代码，让代码更简洁漂亮：**
+我们引入断言库，**继续改造代码，让代码更简洁漂亮：**
 
 ```java
 /**
@@ -88,7 +83,7 @@ public void writeFile() {
 }
 ```
 
-AndroidAssert.assertSubThread()断言为子线程的意思是，断定当前线程一定是子线程，如果不是，那么抛出异常 AssertionFailedError。
+AndroidAssert.assertSubThread()断言为子线程的意思是，**断定当前线程一定是子线程，如果不是，那么抛出异常 AssertionFailedError**。
 
 
 
@@ -161,11 +156,11 @@ public void startMainActivity(Context context) {
 }
 ```
 
-注意，注意，千万注意：**不能开-dontoptimize，开了assumenosideeffects将失效**
+注意，注意，千万注意：**不能开-dontoptimize，开了，-assumenosideeffects将失效**
 
 
 
-对用法有疑惑的可以，看下这篇blog：https://blog.csdn.net/jiese1990/article/details/21752159
+对assumenosideeffects用法有疑惑的可以，看下这篇blog：https://blog.csdn.net/jiese1990/article/details/21752159
 
 以及官方wiki:https://www.guardsquare.com/en/products/proguard/manual/usage#assumenosideeffects
 
