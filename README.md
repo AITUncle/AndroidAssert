@@ -2,10 +2,11 @@
 
 [ ![Download](https://api.bintray.com/packages/vectorzeng/maven/android-assert/images/download.svg?version=0.0.1) ](https://bintray.com/vectorzeng/maven/android-assert/0.0.1/link)
 
-- [x] 简介
-- [x] 一、什么是断言，什么情况下应该使用androidAssert？
-- [x] 二、集成AndroidAssert库
-- [x] 三、API
+- [x] 一、简介
+- [x] 二、什么是断言，什么情况下应该使用androidAssert？
+- [x] 三、在release版本中移除断言代码，只在debug中保留
+- [x] 四、集成AndroidAssert库
+- [x] 五、API
 
 
 
@@ -13,7 +14,7 @@
 
 
 
-## 简介
+## 一、简介
 
 >  android-assert是一个非常简单轻量的android断言库。类似于junit的Assert类。
 >
@@ -23,7 +24,7 @@
 
 
 
-## 一、什么是断言，什么情况下应该使用androidAssert？
+## 二、什么是断言，什么情况下应该使用androidAssert？
 
 通常断言(assert)是用在单元测试，用来校验函数返回的结果。用在自动化测试用来校验程序运行结果。
 
@@ -91,67 +92,15 @@ AndroidAssert.assertSubThread()断言为子线程的意思是，断定当前线�
 
 
 
-**我们继续改良**
+**继续优化**
 
-只有在debug版本，AndroidAssert 类，才有用；
-
-在release版本的apk上，**能否把 AndroidAssert 相关调用的代码删除？**
-
-或者说打包的时候，把 AndroidAssert 相关的调用的代码 和 AndroidAssert类的代码 全部删除，再打包。
-
-于是我们想到了proguard。
-
-在proguard中添加如下配置即可：
-
-```pro
-# -dontoptimize ## 注意注意注意，proguard中配置dontoptimize；将会导致proguard不做代码优化，不会删除AndroidAssert类
--assumenosideeffects class com.it.uncle.lib.util.AndroidAssert{
-    public *;
-}
-```
-
-对用法有疑惑的可以，看下这篇blog：https://blog.csdn.net/jiese1990/article/details/21752159
-
-以及官方wiki:https://www.guardsquare.com/en/products/proguard/manual/usage#assumenosideeffects
-
-**校验assumenosideeffects是否生效**
-
-1. 配置成功后，打包在mapping中搜索：com.it.uncle.lib.util.AndroidAssert
-
-proguard未配置 -assumenosideeffects 的mapping.txt文件
-
-![no-assumenosideeffects](img/no-assumenosideeffects.png)
+> 只有在debug版本，AndroidAssert 类，才有用；
+>
+> 在release版本的apk上，**能否把 AndroidAssert 相关调用的代码删除？**
+>
+> 我们先挖个坑，把例子讲完，再将release删除代码的方法。大家先忍一忍。
 
 
-
-proguard配置了 -assumenosideeffects 的mapping.txt文件:
-
-![assumenosideeffects](img/assumenosideeffects.png)
-
-
-
-
-
-1. 反编译debug和release包对比。
-
-比如，我们demo里的[TestActivity](app/src/main/java/com/it/uncle/androidassert/TestActivity.java)
-
-```java
-public class TestActivity extends MainActivity {
-
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_test);
-
-        AndroidAssert.assertNotNull(getIntent());
-    }
-}
-```
-
-我们分别反编译debug和release包，找到TestActivity类的代码对比：
-
-![image-20200531183510001](img/debug-release.png)
 
 
 
@@ -193,7 +142,79 @@ public void startMainActivity(Context context) {
 
 
 
-## 二、集成AndroidAssert库
+## 三、我们继续改良，例子1，在release版本中移除断言代码，只在debug中保留
+
+> 只有在debug版本，AndroidAssert 类，才有用；
+>
+> 在release版本的apk上，**能否把 AndroidAssert 相关调用的代码删除？**
+>
+> 或者说打包的时候，把 AndroidAssert 相关的调用的代码 和 AndroidAssert类的代码 全部删除，再打包。
+
+于是我想到了proguard。
+
+在proguard中添加如下配置即可：
+
+```pro
+# -dontoptimize ## 注意注意注意，proguard中配置dontoptimize；将会导致proguard不做代码优化，不会删除AndroidAssert类
+-assumenosideeffects class com.it.uncle.lib.util.AndroidAssert{
+    public *;
+}
+```
+
+注意，注意，千万注意：**不能开-dontoptimize，开了assumenosideeffects将失效**
+
+
+
+对用法有疑惑的可以，看下这篇blog：https://blog.csdn.net/jiese1990/article/details/21752159
+
+以及官方wiki:https://www.guardsquare.com/en/products/proguard/manual/usage#assumenosideeffects
+
+
+
+**校验assumenosideeffects是否生效**
+
+1. 配置成功后，打包在mapping中搜索：com.it.uncle.lib.util.AndroidAssert
+
+proguard未配置 -assumenosideeffects 的mapping.txt文件
+
+![no-assumenosideeffects](img/no-assumenosideeffects.png)
+
+
+
+proguard配置了 -assumenosideeffects 的mapping.txt文件:
+
+![assumenosideeffects](img/assumenosideeffects.png)
+
+
+
+
+
+2. 反编译debug和release包对比。
+
+比如，我们demo里的[TestActivity](app/src/main/java/com/it/uncle/androidassert/TestActivity.java)
+
+```java
+public class TestActivity extends MainActivity {
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_test);
+
+        AndroidAssert.assertNotNull(getIntent());
+    }
+}
+```
+
+我们分别反编译debug和release包，找到TestActivity类的代码对比：
+
+![image-20200531183510001](img/debug-release.png)
+
+
+
+
+
+## 四、集成AndroidAssert库
 
 - gradle引入
 
@@ -219,7 +240,7 @@ AndroidAssert.enableThrowError(BuildConfig.DEBUG);//我们设置为debug模式�
 
   
 
-## 三、API
+## 无、API
 
 ```java
 public class AndroidAssert {
